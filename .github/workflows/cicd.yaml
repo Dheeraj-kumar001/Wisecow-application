@@ -43,13 +43,18 @@ jobs:
 
       - name: Configure kubeconfig
         run: |
+          mkdir -p $HOME/.kube
           echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
-
+          
+      - name: Verify cluster connection
+        run: |
+          kubectl cluster-info
+          kubectl get nodes
+          
       - name: Apply Kubernetes manifests
         run: |
           kubectl apply -f wisecow-deployment.yaml
           kubectl apply -f wisecow-service.yaml
           kubectl apply -f wisecow-ingress.yaml
-
 
 
